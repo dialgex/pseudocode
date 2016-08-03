@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # While Loop
 
 ## While (\<condition>) {..run code..}

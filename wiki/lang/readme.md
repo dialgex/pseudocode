@@ -1,3 +1,4 @@
+[Back](/wiki)  
 # Pseudocode Language Reference
 
 ## Basics:

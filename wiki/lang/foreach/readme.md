@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # For Each
 
 	for each \<placeholder> in \<argument> {...}

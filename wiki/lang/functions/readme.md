@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # Functions
 
 Functions are preceded by the # symbol and cannot contain spaces.  

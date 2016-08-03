@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # Mathematical Operations
 
 Math operations work exactly as you expect them to, with both symbols and words being usable.

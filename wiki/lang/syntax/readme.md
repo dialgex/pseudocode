@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # Syntax
 
 Many operators typically used by many languages can be used in Pseudocode,  

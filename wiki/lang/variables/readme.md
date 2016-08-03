@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # Variables
 
 All variables in Pseudocode are preceded by the $ symbol and cannot contain spaces.  

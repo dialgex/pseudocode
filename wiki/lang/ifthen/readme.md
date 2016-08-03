@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # If / Then
 
 	If \<conditional> then {...} (otherwise ... )

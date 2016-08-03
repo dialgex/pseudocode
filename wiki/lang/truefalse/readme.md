@@ -1,3 +1,4 @@
+[Back](/wiki/lang)  
 # True/False Conditions
 
 Variables and functions can return either true or false values.  

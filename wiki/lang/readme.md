@@ -1,6 +1,7 @@
 # Pseudocode Language Reference
 
 ## Basics:
+* [Syntax](/wiki/lang/syntax)
 * [Variables](/wiki/lang/variables)
 * [Functions](/wiki/lang/functions)
 

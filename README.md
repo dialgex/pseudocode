@@ -12,6 +12,9 @@ Some of these languages will be:
 * Lua
 * And maybe many others
 
+I want to stress very heavily that this language is by no means meant to be compact or small.  
+It is big, bulky, large, takes up a lot of text space, and it is meant to be that way.
+
 # Is there a language reference?
 
 I'm currently in the process of writing it out, but yes, there will be a language reference.  

@@ -5,13 +5,12 @@ The language will be able to identify on its own whether a variable is a number 
 However, if it is a mix of letters and numbers, it will default to being a string.
 
 Example:  
-'''
-$Today is Wednesday
-$Tomorrow is Thursday
 
-print $Today
-:Wednesday
+	$Today is Wednesday
+	$Tomorrow is Thursday
 
-print $ Tomorrow
-:$ Tomorrow
-'''
+	print $Today
+	:Wednesday
+
+	print $ Tomorrow
+	:$ Tomorrow

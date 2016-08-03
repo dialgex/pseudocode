@@ -9,7 +9,7 @@ Some variations of this function:
 	For every
 	For all
 
-Examples:
+Examples:  
 	for every $day in $the_week {
 		print($day)
 	}

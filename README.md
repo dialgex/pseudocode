@@ -15,4 +15,4 @@ Some of these languages will be:
 # Is there a language reference?
 
 I'm currently in the process of writing it out, but yes, there will be a language reference.  
-[Click here to go to it](https://github.com/dialgex/pseudocode/wiki/Language-Reference).
+[Click here to go to it](/wiki).

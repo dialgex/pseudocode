@@ -10,15 +10,16 @@ Some variations of this function:
 	For all
 
 Examples:  
-	for every $day in $the_week {
-		print($day)
+
+	for every $day in $the_week {  
+		print($day)  
 	}
 	
-	for each $contact in $address_book {
-		print($contact.name)
-		print($contact.email)
+	for each $contact in $address_book {  
+		print($contact.name)  
+		print($contact.email)  
 	}
 	
-	for all $participants in $sweepstakes {
-		email($participants.email, $participants.name, $email_subject, $email_body)
+	for all $participants in $sweepstakes {  
+		email($participants.email, $participants.name, $email_subject, $email_body)  
 	}

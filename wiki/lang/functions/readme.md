@@ -3,7 +3,7 @@
 Functions are preceded by the # symbol and cannot contain spaces.  
 They also support internal placeholder variables. 
 
-Example:
+Examples:
 
 	#run_this() {
 		run(C:\Thursday.psc)
@@ -26,6 +26,3 @@ Example:
 			return with false
 		}
 	}
-
-	Is_It_Thursday(Friday)
-	:false

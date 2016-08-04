@@ -37,3 +37,11 @@ If the starting word of a line isn't preceded by a symbol, the language assumes 
 
 To comment at the end of a line you use     //     before your comment.  
 To comment multiple lines, you would begin the comment with     //[     and end it with     //]     .  
+
+## Escape Characters
+
+If you want to use a symbol without its function, you can use these characters right before to escape it and use it as a string:
+
+	`
+	\
+	^

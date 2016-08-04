@@ -7,11 +7,31 @@ However, if it is a mix of letters and numbers, it will default to being a strin
 
 Example:  
 
-	$Today is Wednesday
-	$Tomorrow is Thursday
+	$Today is Wednesday  
+	$Tomorrow is Thursday  
 
-	print $Today
-	:Wednesday
+	print ($Today)  
+	:Wednesday  
 
-	print $ Tomorrow
-	:$ Tomorrow
+	print ($ Tomorrow)  
+	:$ Tomorrow  
+	
+If you want to delete a variable all you have to do is make it empty.  
+You can do so like this:  
+	Delete $VarA  
+	Empty $VarA  
+	Nullify $VarA  
+	
+	$VarB is empty  
+	$VarB is null  
+	$VarB is deleted  
+	
+Variables have 3 different types:
+* String  
+* Number  
+* Boolean  
+
+If you want to specify a variable's type, here's some ways to do that:  
+	$day is a string  
+	$time is a number  
+	$noon is true

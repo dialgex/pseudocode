@@ -9,6 +9,7 @@ Example:
 	=
 	Is  
 	Is equal to  
+	Is set to
 	
 	==
 	Matches  

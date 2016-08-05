@@ -14,7 +14,7 @@ echo.
 echo 			Pseudocode to Batch
 echo 			Conversion Utility
 echo.
-echo 			© Dialgex - 2016
+echo 			Â© Dialgex - 2016
 echo 		[====================================]
 echo.
 echo.
@@ -43,11 +43,18 @@ echo 	[3] 	- Program information
 echo.
 
 choice /n /c 13 /m "[----->  "
+
+if %errorlevel%==2 goto:Information
+if %errorlevel%==1 goto:Dictionary 
 :Main_menu_end
 
 :PSC_file_check
 
 :PSC_file_check_end
 
+
+:Dictionary
+
+:Dictionary_end
 pause
 goto:eof

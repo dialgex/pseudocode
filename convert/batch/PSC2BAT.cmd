@@ -20,31 +20,40 @@ REM ......................##.....##.#########....##....##.......##.....##
 REM ......................##.....##.##.....##....##....##....##.##.....##                           
 REM ......................########..##.....##....##.....######..##.....##                           
 REM 
-REM ################################
-REM ###>--------<######>--------<###
-REM ################################
-:Startup
+REM ################################################################################################
+REM ###>--------<######>--------<######>--------<######>--------<######>--------<######>--------<###
+REM ################################################################################################
+:Pre_startup
 :Set_environment_settings
 @echo off
 setlocal enabledelayedexpansion
 chcp 1252
+mode 70, 30
+color f3
 title PSC 2 BAT - Conversion Utility ^|-^| © DeltaZed (Dialgex) - 2016
 :Set_environment_settings_end
+:Pre_startup_end
+REM ################
+REM ################
+REM ################
+:Startup
 cls
 call :Title
 echo 		Beginning Startup
 :Set_vars
 echo.
 echo 		Setting Variables
-set File_dir="Put_files_here"
+set local_dir=%~dp0
+set local_dir=!local_dir:~0,-1!
+set psc_dir=%local_dir%\Put_files_here
 set cmd_input=%*
 echo 		Variables Set
 :Set_vars_end
 :Dir_check
 echo.
 echo 		Checking if directory exists
-if not exist %File_dir% (
-	mkdir %File_dir%
+if not exist %psc_dir% (
+	mkdir %psc_dir%
 	call :First_time_run
 	pause
 	exit /b 1
@@ -74,7 +83,7 @@ REM ################################
 cls
 call :Title
 call :Main_menu_display
-choice /n /c 129
+choice /n /c 120
 if "%errorlevel%"=="3" (
 	cls
 	call :Title
@@ -89,7 +98,7 @@ goto:errbreak
 cls
 call :Title
 call :Multiple_menu_display
-choice /n /c 12349
+choice /n /c 12340
 if "%errorlevel%"=="5" goto:Main_menu
 if "%errorlevel%"=="4" goto:Main_menu
 if "%errorlevel%"=="3" goto:Multiple_from_list
@@ -101,7 +110,7 @@ goto:errbreak
 cls
 call :Title
 call :Specific_menu_display
-choice /n /c 12349
+choice /n /c 12340
 if "%errorlevel%"=="5" goto:Main_menu
 if "%errorlevel%"=="4" goto:Main_menu
 if "%errorlevel%"=="3" goto:Main_menu
@@ -125,17 +134,47 @@ cls
 call :Title
 call :Specific_by_name_display_1
 set /p file=
-if not exist %file% (
-	call :Input_error_2
-)
-call :Dictionary !psc_in!
-call :Specific_by_name_display_2
+if exist %psc_dir%\%file% (
+	echo 			File found here:
+	echo 		\%psc_dir%\%file%
+	echo.
+	echo. 	Is this the correct file? [Y/N]
+	choice /n /c yn
+) else if exist %file% (
+	echo 		File found in base directory:
+	echo 			\%file%
+	echo.
+	echo. 	Is this the correct file? [Y/N]
+	choice /n /c yn
+) else call :Input_error_2
+
 pause
 endlocal
 goto:Specific_menu
 goto:errbreak
 :Single_by_name_end
 :Single_from_list
+cls
+call :Title
+setlocal
+set count=0
+for /r %%a in (.\*) do (
+	set file=%%~nxa
+	set dir=%%~dpa
+	if /i "!file:~-4!"==".psc" if not "!dir!"=="%psc_dir%\" (
+		set file_index=!file_index!!file!,
+	) else if /i "!file:~-4!"==".psc" if "!dir!"=="%psc_dir%\" (
+		for %%g in (%psc_dir%\.) do set curr_dir=%%~nxg
+		set file_index=!file_index!!curr_dir!\!file!,
+	)
+)
+echo !file_index!
+for /f "delims=," %%a in ("%file_index%") do (
+	echo %%a
+)
+pause
+endlocal
+goto:Specific_menu
 goto:errbreak
 :Single_from_list_end
 
@@ -151,21 +190,9 @@ goto:errbreak
 
 
 
-:PSC_check
-echo.
-echo 	PSC check
-SETLOCAL
-for %%a in (%File_dir%\*) do (
-	set psc_in=%%a
-	if "!psc_in!"=="" (
-		echo Directory empty
-		pause
-		goto:Title
-	) else call :Dictionary !psc_in!
-)
-ENDLOCAL
-exit /b 0
-:PSC_check_end
+
+
+
 
 
 
@@ -199,7 +226,7 @@ for /f "tokens=1,2" %%a in ("%*") do (
 			call :Input_error_1
 			exit /b 10
 		)
-		if not exist %File_dir%\!parm! (
+		if not exist %psc_dir%\!parm! (
 			call :Input_error_2
 			exit /b 11
 		)
@@ -214,6 +241,16 @@ echo 		Flag check complete
 exit /b 0
 :Flag_check_end
 
+:Specific_list
+setlocal
+set number=%1
+set file=%2
+set specific_%1=%2
+echo 	[%number%] - %file%
+endlocal
+goto:eof
+:Specific_list_end
+if not "!errorlevel!"=="0"
 :Dictionary
 for /f "tokens=*" %%b in (%1) do (
 	set check_line=%%b
@@ -230,7 +267,6 @@ for /f "tokens=*" %%b in (%1) do (
 )
 goto:eof
 :Dictionary_end
-
 REM ################
 REM THIS SECTION IS PURELY FOR DEBUGGING PURPOSES
 REM ################
@@ -271,7 +307,8 @@ echo.
 echo.
 echo.
 echo.
-echo 	[9] 	- Program information
+echo.
+echo 	[0] 	- Program information
 echo.
 goto:eof
 :Main_menu_display_end
@@ -287,7 +324,8 @@ echo.
 echo.
 echo.
 echo.
-echo 	[9] 	[9] 	- Go back
+echo.
+echo 	[0] 	[0] 	- Go back
 echo.
 goto:eof
 :Multiple_menu_display_end
@@ -303,7 +341,8 @@ echo.
 echo.
 echo.
 echo.
-echo 	[9] 	[9] 	- Go back
+echo.
+echo 	[0] 	[0] 	- Go back
 echo.
 goto:eof
 :Specific_menu_display_end

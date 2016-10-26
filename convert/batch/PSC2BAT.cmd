@@ -28,7 +28,7 @@ REM ############################################################################
 @echo off
 setlocal enabledelayedexpansion
 chcp 1252
-mode 70, 30
+mode 75, 30
 color f3
 title PSC 2 BAT - Conversion Utility ^|-^| © DeltaZed (Dialgex) - 2016
 :Set_environment_settings_end
@@ -83,13 +83,14 @@ REM ################################
 cls
 call :Title
 call :Main_menu_display
-choice /n /c 120
-if "%errorlevel%"=="3" (
+choice /n /c 12-0
+if "%errorlevel%"=="4" (
 	cls
 	call :Title
 	call :Information
 	pause
 ) && goto :Program_start
+if "%errorlevel%"=="3" goto:Debug_menu
 if "%errorlevel%"=="2" goto:Specific_menu
 if "%errorlevel%"=="1" goto:Multiple_menu
 goto:errbreak
@@ -157,21 +158,64 @@ goto:errbreak
 cls
 call :Title
 setlocal
-set count=0
+set index_count=1
+set index_count_tens=0
+set page=0
+@echo on
 for /r %%a in (.\*) do (
 	set file=%%~nxa
 	set dir=%%~dpa
+	if "!index_count:~-1!"=="0" if not "!index_count:~0,1!"=="0" (
+		set /a index_count+=1
+		set /a index_count_tens+=1
+	)
 	if /i "!file:~-4!"==".psc" if not "!dir!"=="%psc_dir%\" (
-		set file_index=!file_index!!file!,
+		set file_index[!index_count!]=!file!
+		echo !index_count!
+	call :Expand_variable file_index[ !index_count! ]
+	echo !return!
+		set /a index_count+=1
 	) else if /i "!file:~-4!"==".psc" if "!dir!"=="%psc_dir%\" (
 		for %%g in (%psc_dir%\.) do set curr_dir=%%~nxg
-		set file_index=!file_index!!curr_dir!\!file!,
+		set file_index[!index_count!]=!curr_dir!\!file!
+		echo !index_count!
+	call :Expand_variable file_index[ !index_count! ]
+	echo !return!
+		set /a index_count+=1
 	)
+	pause
 )
-echo !file_index!
-for /f "delims=," %%a in ("%file_index%") do (
-	echo %%a
+set /a index_count-=1
+for /l %%a in (1,1,9) do (
+	if "%page%"=="0" (
+		set entry_num=%%a
+	) else (
+		set entry_num=!page!%%a
+	)
+	call :Expand_variable file_index[ !entry_num! ]
+	set entry=!return!
+	echo 	[%%a] [!entry_num!]	!entry!
 )
+if "%index_count_tens%" gtr "0" (
+	if "%page%" equ "0" (
+		echo 				[^>] - Next page
+	) else if "%page%" equ "%index_count_tens%" (
+		echo 	[^<] - Previous page
+	) else if "%page%" lss "%index_count_tens%" (
+		echo 	[^<] - Previous page	[^>] - Next page
+	)
+) 
+
+
+
+
+@echo off
+
+
+
+
+
+
 pause
 endlocal
 goto:Specific_menu
@@ -250,7 +294,18 @@ echo 	[%number%] - %file%
 endlocal
 goto:eof
 :Specific_list_end
-if not "!errorlevel!"=="0"
+
+:Expand_variable
+setlocal EnableDelayedExpansion
+set var1=%1
+set var2=%2
+set var3=%3
+set pre_expnd=%var1%%var2%%var3%
+set expnd=%!pre_expnd!%
+endlocal & set return=%expnd%
+goto:eof
+:Expand_variable_end
+
 :Dictionary
 for /f "tokens=*" %%b in (%1) do (
 	set check_line=%%b
@@ -272,6 +327,35 @@ REM THIS SECTION IS PURELY FOR DEBUGGING PURPOSES
 REM ################
 
 :debug
+:Debug_menu
+cls
+call :Title
+call :Debug_menu_display
+choice /n /c 10
+if "%errorlevel%"=="2" goto:Main_menu
+if "%errorlevel%"=="1" goto:Debug_function_menu
+goto:errbreak
+:Debug_menu_end
+:Debug_function_menu
+cls
+call :Title
+call :Debug_function_menu_display
+choice /n /c 10
+if "%errorlevel%"=="2" goto:Main_menu
+if "%errorlevel%"=="1" goto:Debug_Expand_Variable
+goto:errbreak
+:Debug_function_menu_end
+
+:Debug_Expand_Variable
+cls
+call :Title
+setlocal
+set /p "bugVar1=Name the variable: "
+set /p "bugVar2=Name the value: "
+pause
+endlocal
+goto:Debug_function_menu
+:Debug_Expand_Variable_end
 :debug_end
 
 REM ################
@@ -307,7 +391,7 @@ echo.
 echo.
 echo.
 echo.
-echo.
+echo 	[-] 	- Debug Menu
 echo 	[0] 	- Program information
 echo.
 goto:eof
@@ -365,6 +449,40 @@ echo 	[9] 	[9] 	- Go back
 echo.
 goto:eof
 :Specific_by_name_display_2_end
+:Debug_menu_display
+echo.
+echo 		[==========]  DEBUG MENU  [==========]
+echo.
+echo 	[1] 	- Test a function
+echo 	[2] 	- TBD
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo 	[0] 	- Back
+echo.
+goto:eof
+:Debug_menu_display_end
+:Debug_function_menu_display
+echo.
+echo 		[==========]  DEBUG MENU  [==========]
+echo.
+echo 	[1] 	- Variable Expansion
+echo 	[2] 	- TBD
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo 	[0] 	- Back
+echo.
+goto:eof
+:Debug_function_menu_display_end
 :Information
 echo 		COMING SOON
 goto:eof

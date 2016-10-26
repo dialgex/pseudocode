@@ -24,7 +24,9 @@ REM ############################################################################
 REM ###>--------<######>--------<######>--------<######>--------<######>--------<######>--------<###
 REM ################################################################################################
 :Pre_startup
+set start_skip=false
 :Set_environment_settings
+if %start_skip%==true goto:Startup
 @echo off
 setlocal enabledelayedexpansion
 chcp 1252
@@ -43,8 +45,8 @@ echo 		Beginning Startup
 :Set_vars
 echo.
 echo 		Setting Variables
-set local_dir=%~dp0
-set local_dir=!local_dir:~0,-1!
+set temp_var=%~dp0
+set local_dir=%temp_var:~0,-1%
 set psc_dir=%local_dir%\Put_files_here
 set cmd_input=%*
 echo 		Variables Set
@@ -83,7 +85,7 @@ REM ################################
 cls
 call :Title
 call :Main_menu_display
-choice /n /c 12-0
+choice /n /c 12D0 /cs
 if "%errorlevel%"=="4" (
 	cls
 	call :Title
@@ -155,13 +157,11 @@ goto:Specific_menu
 goto:errbreak
 :Single_by_name_end
 :Single_from_list
-cls
-call :Title
 setlocal
 set index_count=1
 set index_count_tens=0
 set page=0
-@echo on
+
 for /r %%a in (.\*) do (
 	set file=%%~nxa
 	set dir=%%~dpa
@@ -171,20 +171,23 @@ for /r %%a in (.\*) do (
 	)
 	if /i "!file:~-4!"==".psc" if not "!dir!"=="%psc_dir%\" (
 		set file_index[!index_count!]=!file!
-		echo !index_count!
-	call :Expand_variable file_index[ !index_count! ]
-	echo !return!
+		call :Expand_variable file_index[!index_count!]
 		set /a index_count+=1
 	) else if /i "!file:~-4!"==".psc" if "!dir!"=="%psc_dir%\" (
 		for %%g in (%psc_dir%\.) do set curr_dir=%%~nxg
 		set file_index[!index_count!]=!curr_dir!\!file!
-		echo !index_count!
-	call :Expand_variable file_index[ !index_count! ]
-	echo !return!
+		call :Expand_variable file_index[ !index_count! ]
 		set /a index_count+=1
 	)
-	pause
 )
+:SFL_Browse
+cls
+call :Title
+
+set /a page_display=%page%+1
+echo      [Page %page_display%]
+echo.
+
 set /a index_count-=1
 for /l %%a in (1,1,9) do (
 	if "%page%"=="0" (
@@ -192,28 +195,33 @@ for /l %%a in (1,1,9) do (
 	) else (
 		set entry_num=!page!%%a
 	)
-	call :Expand_variable file_index[ !entry_num! ]
+	call :Expand_variable file_index[!entry_num!]
 	set entry=!return!
-	echo 	[%%a] [!entry_num!]	!entry!
+	echo 	[!entry_num!]	!entry!
 )
+echo.
 if "%index_count_tens%" gtr "0" (
 	if "%page%" equ "0" (
-		echo 				[^>] - Next page
+		echo 				[0] - Next page
+		echo 		  [] - Enter Selection
+		echo.
+		choice /n /c 0
+		if "!errorlevel!"=="1" ( set /a page+=1 ) & goto:SFL_Browse
 	) else if "%page%" equ "%index_count_tens%" (
-		echo 	[^<] - Previous page
+		echo 	[1] - Previous page
+		echo 		  [] - Enter Selection
+		echo.
+		choice /n /c 1
+		if "!errorlevel!"=="1" ( set /a page-=1 ) & goto:SFL_Browse
 	) else if "%page%" lss "%index_count_tens%" (
-		echo 	[^<] - Previous page	[^>] - Next page
+		echo 	[1] - Previous page	[0] - Next page
+		echo 		  [] - Enter Selection
+		echo.
+		choice /n /c 10
+		if "!errorlevel!"=="2" ( set /a page+=1 ) & goto:SFL_Browse
+		if "!errorlevel!"=="1" ( set /a page-=1 ) & goto:SFL_Browse
 	)
 ) 
-
-
-
-
-@echo off
-
-
-
-
 
 
 pause
@@ -298,10 +306,8 @@ goto:eof
 :Expand_variable
 setlocal EnableDelayedExpansion
 set var1=%1
-set var2=%2
-set var3=%3
-set pre_expnd=%var1%%var2%%var3%
-set expnd=%!pre_expnd!%
+set pre_expnd=%var1%
+set expnd=!%pre_expnd%!
 endlocal & set return=%expnd%
 goto:eof
 :Expand_variable_end
@@ -391,7 +397,7 @@ echo.
 echo.
 echo.
 echo.
-echo 	[-] 	- Debug Menu
+echo 	[D] 	- Debug Menu
 echo 	[0] 	- Program information
 echo.
 goto:eof
